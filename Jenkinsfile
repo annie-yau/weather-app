@@ -31,7 +31,6 @@ pipeline {
                         echo "Create service"
                         echo "finished"
                     '''
-                }
             }
         }
     }
