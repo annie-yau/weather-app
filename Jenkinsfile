@@ -14,7 +14,7 @@ pipeline {
         stage('Continuous Integration') {
             steps {                 
                 sh '''
-                   mvn clean deploy
+                   mvn clean deploy -X
                    '''
              }             
         }
