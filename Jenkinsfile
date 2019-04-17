@@ -11,6 +11,9 @@ pipeline {
     }
      
     stages {
+        app-name = weather-app
+        nexus-docker-registry = "http://202.77.40.221:12015"
+        nexus-credentials = 
         stage('Continuous Integration') {
             steps {                 
                 sh '''
@@ -19,10 +22,10 @@ pipeline {
                 script {
                     def dockerHome = tool 'myDocker'
                     env.PATH = "${dockerHome}/bin:${env.PATH}"
-                    app = docker.build("weather-app")
+                    app = docker.build($app-name)
                     app.inside { sh 'echo "Tests passed"'
                     }
-                    docker.withRegistry('http://202.77.40.221:12015', 'nexus-credentials') {
+                    docker.withRegistry($nexus-docker-registry, $nexus-credentials) {
                         app.push("${env.BUILD_NUMBER}")
                         app.push("latest")
                     }
@@ -32,7 +35,15 @@ pipeline {
         stage('Continuous Delivery') {
             steps {
                     sh '''   
+                        namespace = "demo-dev-env"
+                        imageTag = "$nexus-docker-registry/$app-name:${env.BUILD_NUMBER}"
                         echo "deploy to K8S "
+                        sh '''
+                            kubectl get ns $namespace || kubectl create ns $namespace
+                            sed -i.bak 's#$nexus-docker-registry/$app-name:#$imageTag#' ./*.yaml 
+                            kubectl --namespace=${namespace} apply -f ./deployment.yaml
+                            kubectl --namespace=${namespace} apply -f ./service.yaml                                                        
+                            ...
                     '''
             }
         }
