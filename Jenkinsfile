@@ -16,18 +16,18 @@ pipeline {
                 sh '''
                    mvn clean package
                    '''
-             }             
+             }
+            app = docker.build("weather-app")
+            app.inside { sh 'echo "Tests passed"'
+            docker.withRegistry('http://202.77.40.221:12015', 'nexus-credentials') {
+                app.push("${env.BUILD_NUMBER}")
+                app.push("latest")
+            }
         }
         stage('Continuous Delivery') {
             steps {
                     sh '''   
-                        echo "remove existing docker image "
-                        if docker inspect --type=image dhvines/weather-app:1.0-SNAPSHOT; then
-                            echo "image already exists, delete first"
-                            docker rmi dhvines/weather-app:1.0-SNAPSHOT
-                        fi   
-                        docker build -t dhvines/weather-app:1.0-SNAPSHOT .
-                        rem docker run -p 8090:8080 dhvines/weather-app:1.0-SNAPSHOT
+                        echo "deploy to K8S "
                     '''
             }
         }
