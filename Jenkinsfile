@@ -11,16 +11,14 @@ pipeline {
     }
      
     stages {
-        stage('Initialize'){
-            def dockerHome = tool 'myDocker'
-            env.PATH = "${dockerHome}/bin:${env.PATH}"
-        }        
         stage('Continuous Integration') {
             steps {                 
                 sh '''
                    mvn clean package
                    '''
                 script {
+                    def dockerHome = tool 'myDocker'
+                    env.PATH = "${dockerHome}/bin:${env.PATH}"
                     app = docker.build("weather-app")
                     app.inside { sh 'echo "Tests passed"'
                     }
