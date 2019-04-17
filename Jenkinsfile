@@ -27,7 +27,7 @@ pipeline {
                             docker rmi dhvines/weather-app:1.0-SNAPSHOT
                         fi   
                         docker build -t dhvines/weather-app:1.0-SNAPSHOT .
-                        docker run -p 8090:8080 dhvines/weather-app:1.0-SNAPSHOT
+                        rem docker run -p 8090:8080 dhvines/weather-app:1.0-SNAPSHOT
                     '''
             }
         }
