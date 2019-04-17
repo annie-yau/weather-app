@@ -1,0 +1,20 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: weather-app-deployment
+  namespace: demo-dev-env
+  labels:
+    app: weather-app
+  spec:
+    replicas: 1
+    template:
+      metadata:
+        labels:
+          apps: weather
+         spec:
+          containers:
+          - name: weather
+            image: 
+            ports:
+            - containerPort: 8081
+            
