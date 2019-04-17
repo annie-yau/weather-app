@@ -34,17 +34,18 @@ pipeline {
         }
         stage('Continuous Delivery') {
             steps {
+                    withKubeConfig([credentialsId: 'k8suser', serverUrl: 'https://202.77.40.221']) {
                     sh '''   
                         namespace = "demo-dev-env"
                         imageTag = "$nexus-docker-registry/$app-name:${env.BUILD_NUMBER}"
                         echo "deploy to K8S "
-                        sh '''
                             kubectl get ns $namespace || kubectl create ns $namespace
                             sed -i.bak 's#$nexus-docker-registry/$app-name:#$imageTag#' ./*.yaml 
                             kubectl --namespace=${namespace} apply -f ./deployment.yaml
                             kubectl --namespace=${namespace} apply -f ./service.yaml                                                        
                             ...
-                    '''
+                    }
+                }
             }
         }
     }
