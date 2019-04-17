@@ -16,13 +16,15 @@ pipeline {
                 sh '''
                    mvn clean package
                    '''
-             }
-            app = docker.build("weather-app")
-            app.inside { sh 'echo "Tests passed"'
-            }
-            docker.withRegistry('http://202.77.40.221:12015', 'nexus-credentials') {
-                app.push("${env.BUILD_NUMBER}")
-                app.push("latest")
+                script {
+                    app = docker.build("weather-app")
+                    app.inside { sh 'echo "Tests passed"'
+                    }
+                    docker.withRegistry('http://202.77.40.221:12015', 'nexus-credentials') {
+                        app.push("${env.BUILD_NUMBER}")
+                        app.push("latest")
+                    }
+                }
             }
         }
         stage('Continuous Delivery') {
