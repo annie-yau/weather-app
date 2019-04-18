@@ -10,7 +10,8 @@ pipeline {
         pollSCM('')
     }
      
-    stages {       
+    stages {  
+        /*
         stage('Continuous Integration') {
             steps {                 
                 sh '''
@@ -26,12 +27,13 @@ pipeline {
                 }
             }
         }
+        */
         stage('Continuous Delivery') {
             steps {
                     withKubeConfig([credentialsId: 'k8suser', serverUrl: 'https://202.77.40.221']) {
                     sh '''   
                         namespace = "demo-dev-env"
-                        imageTag = "http://202.77.40.221:12015/docker-private/weather-app:${env.BUILD_NUMBER}"
+                        imageTag = "technet-k8s.hds-cloudconnect.com:8551/weather-app:latest"                        
                         echo "deploy to K8S"
                             kubectl get ns $namespace || kubectl create ns $namespace
                             sed -i.bak 's#weather-app:latest#$imageTag#' ./*.yaml 
