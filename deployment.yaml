@@ -1,4 +1,4 @@
-apiVersion: apps/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: weather-app-deployment
@@ -16,5 +16,5 @@ metadata:
           - name: weather
             image: weather-app:latest
             ports:
-            - containerPort: 8081
+            - containerPort: 8080
             
