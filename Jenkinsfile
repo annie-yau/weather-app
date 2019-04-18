@@ -10,9 +10,7 @@ pipeline {
         pollSCM('')
     }
      
-    stages {
-        app-name = weather-app
-        nexus-docker-registry = "http://202.77.40.221:12015/docker-private"
+    stages {       
         stage('Continuous Integration') {
             steps {                 
                 sh '''
@@ -21,10 +19,10 @@ pipeline {
                 script {
                     def dockerHome = tool 'myDocker'
                     env.PATH = "${dockerHome}/bin:${env.PATH}"
-                    app = docker.build($app-name)
+                    app = docker.build("weather-app")
                     app.inside { sh 'echo "Tests passed"'
                     }
-                    docker.withRegistry($nexus-docker-registry, $nexus-credentials) {
+                    docker.withRegistry('http://202.77.40.221:12015/docker-private', $nexus-credentials) {
                         app.push("${env.BUILD_NUMBER}")
                         app.push("latest")
                     }
@@ -36,10 +34,10 @@ pipeline {
                     withKubeConfig([credentialsId: 'k8suser', serverUrl: 'https://202.77.40.221']) {
                     sh '''   
                         namespace = "demo-dev-env"
-                        imageTag = "$nexus-docker-registry/$app-name:${env.BUILD_NUMBER}"
+                        imageTag = "http://202.77.40.221:12015/docker-private/weather-app:${env.BUILD_NUMBER}"
                         echo "deploy to K8S"
                             kubectl get ns $namespace || kubectl create ns $namespace
-                            sed -i.bak 's#$nexus-docker-registry/$app-name:#$imageTag#' ./*.yaml 
+                            sed -i.bak 's#http://202.77.40.221:12015/docker-private/weather-app:#$imageTag#' ./*.yaml 
                             kubectl --namespace=${namespace} apply -f ./deployment.yaml
                             kubectl --namespace=${namespace} apply -f ./service.yaml                                                        
                         '''
