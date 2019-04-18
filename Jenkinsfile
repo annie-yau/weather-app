@@ -37,12 +37,12 @@ pipeline {
                     sh '''   
                         namespace = "demo-dev-env"
                         imageTag = "$nexus-docker-registry/$app-name:${env.BUILD_NUMBER}"
-                        echo "deploy to K8S "
+                        echo "deploy to K8S"
                             kubectl get ns $namespace || kubectl create ns $namespace
                             sed -i.bak 's#$nexus-docker-registry/$app-name:#$imageTag#' ./*.yaml 
                             kubectl --namespace=${namespace} apply -f ./deployment.yaml
                             kubectl --namespace=${namespace} apply -f ./service.yaml                                                        
-                            ...
+                        '''
                     }
                 }
             }
