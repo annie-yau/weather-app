@@ -10,11 +10,11 @@ metadata:
     template:
       metadata:
         labels:
-          apps: weather
+          apps: weather-app
          spec:
           containers:
           - name: weather
-            image: 
+            image: weather-app:latest
             ports:
             - containerPort: 8081
             
