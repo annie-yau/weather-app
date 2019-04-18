@@ -34,7 +34,7 @@ pipeline {
                         imageTag = "http://202.77.40.221:12015/docker-private/weather-app:${env.BUILD_NUMBER}"
                         echo "deploy to K8S"
                             kubectl get ns $namespace || kubectl create ns $namespace
-                            sed -i.bak 's#http://202.77.40.221:12015/docker-private/weather-app:#$imageTag#' ./*.yaml 
+                            sed -i.bak 's#weather-app:latest#$imageTag#' ./*.yaml 
                             kubectl --namespace=${namespace} apply -f ./deployment.yaml
                             kubectl --namespace=${namespace} apply -f ./service.yaml                                                        
                         '''
