@@ -12,8 +12,7 @@ pipeline {
      
     stages {
         app-name = weather-app
-        nexus-docker-registry = "http://202.77.40.221:12015"
-        nexus-credentials = 
+        nexus-docker-registry = "http://202.77.40.221:12015/docker-private"
         stage('Continuous Integration') {
             steps {                 
                 sh '''
