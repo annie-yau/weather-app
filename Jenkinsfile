@@ -17,10 +17,10 @@ pipeline {
                    mvn clean package
                    '''
                 script {
-                    app = docker.build("weather-app")
+                    app = docker.build("weather-app:${env.BUILD_NUMBER}")
                     app.inside { sh 'echo "Tests passed"'
                     }
-                    docker.withRegistry('http://202.77.40.221:12015/docker-private', $nexus-credentials) {
+                    docker.withRegistry('http://202.77.40.221:12015/docker-private', 'nexus-credentials') {
                         app.push("${env.BUILD_NUMBER}")
                         app.push("latest")
                     }
