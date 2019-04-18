@@ -20,7 +20,7 @@ pipeline {
                     app = docker.build("weather-app:${env.BUILD_NUMBER}")
                     app.inside { sh 'echo "Tests passed"'
                     }
-                    docker.withRegistry('http://202.77.40.221:12015/docker-private', 'nexus-credentials') {
+                    docker.withRegistry('http://technet-k8s.hds-cloudconnect.com:12015/repository/docker-private/', 'nexus-credentials') {
                         app.push()
                     }
                 }
