@@ -12,7 +12,7 @@ pipeline {
     */
      
     stages {  
-        
+        /*
         stage('Continuous Integration') {
             steps {                 
                 sh '''
@@ -29,10 +29,10 @@ pipeline {
                 }
             }
         }
-        
+        */
         stage('Continuous Delivery') {
             steps {
-                    withKubeConfig([credentialsId: 'k8suser', serverUrl: 'https://technet-k8s.hds-cloudconnect.com/api/v1']) {                    
+                    withKubeConfig([credentialsId: 'k8suser', serverUrl: 'https://technet-k8s.hds-cloudconnect.com']) {                    
                     sh '''   
                         echo "deploy to K8S"
                         kubectl create ns demo-dev-env                    
