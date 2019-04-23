@@ -4,10 +4,12 @@ pipeline {
     tools {
     maven 'apache-maven-3.6.1'
     }
-       
+    
+    /*
     triggers {
         githubPush()       
     }
+    */
      
     stages {  
         
@@ -32,16 +34,11 @@ pipeline {
             steps {
                     withKubeConfig([credentialsId: 'k8suser', serverUrl: 'https://api.k8s.technet-k8s.hds-cloudconnect.com']) {                    
                     sh '''   
-                        namespace = "demo-dev-env"
-                        imageTag = "http://technet-k8s.hds-cloudconnect.com:8551/weather-app:latest"                        
                         echo "deploy to K8S"
-                        if kubectl get ns $namespace; then
-                            echo "create namespace"
-                            kubectl create ns $namespace
-                        fi
-                        sed -i.bak 's#weather-app:latest#$imageTag#' ./*.yaml 
-                        kubectl --namespace=${namespace} apply -f ./deployment.yaml
-                        kubectl --namespace=${namespace} apply -f ./service.yaml                                                        
+                        kubectl create ns demo-dev-env                    
+                        sed -i.bak 's#weather-app:latest#http://technet-k8s.hds-cloudconnect.com:8551/weather-app:latest#' ./*.yaml 
+                        kubectl --namespace=demo-dev-env apply -f ./deployment.yaml
+                        kubectl --namespace=demo-dev-env apply -f ./service.yaml                                                        
                         '''                
                     }
                }
