@@ -41,8 +41,8 @@ pipeline {
                         kubectl --namespace=${namespace} apply -f ./deployment.yaml
                         kubectl --namespace=${namespace} apply -f ./service.yaml                                                        
                         '''
-                    }
                     */
+                    }
                }
           }
      }
