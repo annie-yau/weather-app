@@ -32,7 +32,7 @@ pipeline {
         
         stage('Continuous Delivery') {
             steps {
-                    withKubeConfig([credentialsId: 'k8suser', serverUrl: 'https://api.k8s.10.4.1.50:6443']) {                    
+                    withKubeConfig([credentialsId: 'k8suser', serverUrl: 'https://technet-k8s.hds-cloudconnect.com']) {                    
                     sh '''   
                         echo "deploy to K8S"
                         kubectl create ns demo-dev-env                    
