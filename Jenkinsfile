@@ -17,7 +17,8 @@ pipeline {
                    mvn clean package
                    '''
                 script {
-                    app = docker.build("weather-app:${env.BUILD_NUMBER}")
+                    //app = docker.build("weather-app:${env.BUILD_NUMBER}")
+                    app = docker.build("weather-app:latest")
                     app.inside { sh 'echo "Tests passed"'
                     }
                     docker.withRegistry('http://technet-k8s.hds-cloudconnect.com:8551/weather-app', 'nexus-credentials') {
