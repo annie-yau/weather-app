@@ -29,7 +29,7 @@ pipeline {
         
         stage('Continuous Delivery') {
             steps {
-                    withKubeConfig([credentialsId: 'k8suser', serverUrl: 'https://202.77.40.221']) {
+                    withKubeConfig([credentialsId: 'k8suser', serverUrl: 'https://api.k8s.technet-k8s.hds-cloudconnect.com']) {
                     sh 'kubectl get pods'
                     /*
                     sh '''   
