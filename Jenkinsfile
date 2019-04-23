@@ -35,7 +35,10 @@ pipeline {
                         namespace = "demo-dev-env"
                         imageTag = "http://technet-k8s.hds-cloudconnect.com:8551/weather-app:latest"                        
                         echo "deploy to K8S"
-                        kubectl get ns $namespace || kubectl create ns $namespace
+                        if kubectl get ns $namespace; then
+                            echo "create namespace"
+                            kubectl create ns $namespace
+                        fi
                         sed -i.bak 's#weather-app:latest#$imageTag#' ./*.yaml 
                         kubectl --namespace=${namespace} apply -f ./deployment.yaml
                         kubectl --namespace=${namespace} apply -f ./service.yaml                                                        
