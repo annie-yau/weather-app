@@ -10,7 +10,7 @@ pipeline {
     }
      
     stages {  
-        /*
+        
         stage('Continuous Integration') {
             steps {                 
                 sh '''
@@ -20,13 +20,13 @@ pipeline {
                     app = docker.build("weather-app:${env.BUILD_NUMBER}")
                     app.inside { sh 'echo "Tests passed"'
                     }
-                    docker.withRegistry('http://202.77.40.221:8551/repository/mike-docker-hosted/', 'nexus-credentials') {
+                    docker.withRegistry('http://technet-k8s.hds-cloudconnect.com:8551/weather-app', 'nexus-credentials') {
                         app.push()
                     }
                 }
             }
         }
-        */
+        
         stage('Continuous Delivery') {
             steps {
                     withKubeConfig([credentialsId: 'k8suser', serverUrl: 'https://202.77.40.221']) {
