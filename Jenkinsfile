@@ -6,8 +6,7 @@ pipeline {
     }
        
     triggers {
-        githubPush()
-        pollSCM('')
+        githubPush()       
     }
      
     stages {  
@@ -32,6 +31,7 @@ pipeline {
             steps {
                     withKubeConfig([credentialsId: 'k8suser', serverUrl: 'https://202.77.40.221']) {
                     sh 'kubectl get pods'
+                    /*
                     sh '''   
                         namespace = "demo-dev-env"
                         imageTag = "weather-app:latest"                        
@@ -42,6 +42,7 @@ pipeline {
                         kubectl --namespace=${namespace} apply -f ./service.yaml                                                        
                         '''
                     }
+                    */
                }
           }
      }
