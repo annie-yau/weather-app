@@ -30,19 +30,16 @@ pipeline {
         
         stage('Continuous Delivery') {
             steps {
-                    withKubeConfig([credentialsId: 'k8suser', serverUrl: 'https://technet-k8s.hds-cloudconnect.com']) {
-                    sh 'kubectl get pods'
-                    /*
+                    withKubeConfig([credentialsId: 'k8suser', serverUrl: 'https://api.k8s.technet-k8s.hds-cloudconnect.com']) {                    
                     sh '''   
                         namespace = "demo-dev-env"
-                        imageTag = "weather-app:latest"                        
+                        imageTag = "http://technet-k8s.hds-cloudconnect.com:8551/weather-app:latest"                        
                         echo "deploy to K8S"
                         kubectl get ns $namespace || kubectl create ns $namespace
                         sed -i.bak 's#weather-app:latest#$imageTag#' ./*.yaml 
                         kubectl --namespace=${namespace} apply -f ./deployment.yaml
                         kubectl --namespace=${namespace} apply -f ./service.yaml                                                        
-                        '''
-                    */
+                        '''                
                     }
                }
           }
