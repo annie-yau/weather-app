@@ -4,11 +4,10 @@ metadata:
   name: weather-app-service
   namespace: demo-env-dev
 spec:
-  type: NodePort
   ports:
-  - name: http
-    port: 8080
-    targetPort: 80
-    protocol: TCP
+    - name: http
+      port: 8080
+      protocol: TCP
+  type: NodePort
   selector:
     app: weather-app
