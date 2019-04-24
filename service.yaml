@@ -5,10 +5,7 @@ metadata:
   namespace: demo-env-dev
 spec:
   ports:
-    - name: http
-      port: 8080
-      targetPort: 80
-      protocol: TCP
-  type: NodePort
+      port: 80
+  type: LoadBalancer
   selector:
     app: weather-app
