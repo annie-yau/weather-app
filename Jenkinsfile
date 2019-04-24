@@ -34,8 +34,7 @@ pipeline {
             steps {
                     withKubeConfig([credentialsId: 'k8suser', serverUrl: 'https://10.4.1.50:6443']) {                    
                     sh '''   
-                        echo "deploy to K8S"
-                        kubectl create ns demo-dev-env                    
+                        echo "deploy to K8S"                                  
                         sed -i.bak 's#weather-app:latest#http://technet-k8s.hds-cloudconnect.com:8551/weather-app:latest#' ./*.yaml 
                         kubectl --namespace=demo-dev-env apply -f ./deployment.yaml
                         kubectl --namespace=demo-dev-env apply -f ./service.yaml                                                        
