@@ -4,8 +4,11 @@ metadata:
   name: weather-app-service
   namespace: demo-env-dev
 spec:
-  type: LoadBalancer
+  type: NodePort
   ports:
-    - port: 80
+  - name: http
+    port: 8080
+    targetPort: 80
+    protocol: TCP
   selector:
     app: weather-app
