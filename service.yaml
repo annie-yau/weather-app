@@ -4,8 +4,8 @@ metadata:
   name: weather-app-service
   namespace: demo-env-dev
 spec:
-  ports:
-      port: 80
   type: LoadBalancer
+  ports:
+    - port: 80
   selector:
     app: weather-app
