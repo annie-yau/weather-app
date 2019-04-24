@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: weather-app-deployment
-  namespace: demo-dev-env
+  namespace: demo-env-dev
   labels:
     app: weather-app
 spec:
