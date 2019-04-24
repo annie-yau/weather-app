@@ -5,16 +5,16 @@ metadata:
   namespace: demo-dev-env
   labels:
     app: weather-app
-  spec:
-    replicas: 1
-    template:
-      metadata:
-        labels:
-          app: weather-app
-         spec:
-          containers:
-          - name: weather
-            image: weather-app:latest
-            ports:
-            - containerPort: 8080
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: weather-app
+    spec:
+      containers:
+      - name: weather
+        image: weather-app:latest
+        ports:
+        - containerPort: 8080
             
