@@ -10,7 +10,7 @@ metadata:
     template:
       metadata:
         labels:
-          apps: weather-app
+          app: weather-app
          spec:
           containers:
           - name: weather
