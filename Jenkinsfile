@@ -3,6 +3,7 @@ pipeline {
 
     tools {
     maven 'apache-maven-3.6.1'
+    nodejs 'NodeJS 11.14'
     }
     
     /*
@@ -32,6 +33,7 @@ pipeline {
         */
         stage('SonarQube analysis') {
             steps {
+                sh 'npm config ls'
                 withSonarQubeEnv('SonarQube-7.7') {
                     // requires SonarQube Scanner for Maven 3.2+
                     sh 'mvn sonar:sonar'
