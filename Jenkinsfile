@@ -30,6 +30,13 @@ pipeline {
             }
         }
         */
+        stage('SonarQube analysis' {
+            withSonarQubeEnv('SonarQube-7.7') {
+                // requires SonarQube Scanner for Maven 3.2+
+                sh 'mvn sonar:sonar'
+            }
+        }
+              
         stage('Continuous Delivery') {
             steps {
                     withKubeConfig([credentialsId: 'k8suser', serverUrl: 'https://10.4.1.50:6443']) {                    
