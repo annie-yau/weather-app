@@ -24,7 +24,7 @@ pipeline {
                     app = docker.build("weather-app:latest")
                     app.inside { sh 'echo "Tests passed"'
                     }
-                    docker.withRegistry('https://technet-k8s.hds-cloudconnect.com:8551/weather-app', 'nexus-credentials') {
+                    docker.withRegistry('https://technet-k8s.hds-cloudconnect.com:12018/weather-app', 'nexus-credentials') {
                         app.push()
                     }
                 }
@@ -54,7 +54,7 @@ pipeline {
                             kubectl delete deployment weather-app-deployment -n demo-env-dev
                         fi                        
                         echo "deploy to K8S"                                  
-                        sed -i.bak 's#weather-app:latest#technet-k8s.hds-cloudconnect.com:8551/weather-app:latest#' ./*.yaml
+                        sed -i.bak 's#weather-app:latest#technet-k8s.hds-cloudconnect.com:12018/weather-app:latest#' ./*.yaml
                         kubectl --namespace=demo-env-dev apply -f ./deployment.yaml
                         kubectl --namespace=demo-env-dev apply -f ./service.yaml                                                        
                         '''                
