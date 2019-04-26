@@ -13,7 +13,7 @@ pipeline {
     */
      
     stages {  
-        /*
+       
         stage('Continuous Integration') {
             steps {                 
                 sh '''
@@ -30,7 +30,7 @@ pipeline {
                 }
             }
         }
-        */
+        
         stage('SonarQube analysis') {
             steps {
                 sh 'npm config ls'
