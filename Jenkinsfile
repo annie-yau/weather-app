@@ -23,7 +23,7 @@ pipeline {
                     app = docker.build("weather-app:latest")
                     app.inside { sh 'echo "Tests passed"'
                     }
-                    docker.withRegistry('http://technet-k8s.hds-cloudconnect.com:8551/weather-app', 'nexus-credentials') {
+                    docker.withRegistry('https://technet-k8s.hds-cloudconnect.com:8551/weather-app', 'nexus-credentials') {
                         app.push()
                     }
                 }
