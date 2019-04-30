@@ -63,7 +63,7 @@ pipeline {
               
         stage('Continuous Delivery') {
             steps {
-                    withKubeConfig([credentialsId: 'k8suser', serverUrl: 'https://10.4.1.50:6443']) {                    
+                    withKubeConfig([credentialsId: 'k8suser', serverUrl: 'https://technet-k8s.hds-cloudconnect.com:6443']) {                    
                     sh '''  
                         if kubectl describe service weather-app-service -n demo-env-dev; then
                             echo "Service already exists, delete first"
