@@ -1,16 +1,36 @@
 pipeline {
     agent any
 
+    // nodejs is for SonarQube
     tools {
     maven 'apache-maven-3.6.1'
-    nodejs 'NodeJS 11.14'
+    nodejs 'NodeJS 11.14' 
     }
     
-    /*
-    triggers {
-        githubPush()       
+   // Reference the GitLab connection name from your Jenkins Global configuration (http://JENKINS_URL/configure, GitLab section)
+    options {
+        gitLabConnection('gitlab')
     }
-    */
+    
+    triggers {
+        gitlab( triggerOnPush: true, 
+                branchFilterType: 'All',
+                triggerOnMergeRequest: false,
+                triggerOpenMergeRequestOnPush: "never",
+                triggerOnNoteRequest: true,
+                noteRegex: "Jenkins please retry a build",
+                skipWorkInProgressMergeRequest: true,
+                secretToken: "abcdefghijklmnopqrstuvwxyz0123456789ABCDEF",
+                ciSkip: false,
+                setBuildDescription: true,
+                addNoteOnMergeRequest: true,
+                addCiMessage: true,
+                addVoteOnMergeRequest: true,
+                acceptMergeRequestOnSuccess: false,
+                includeBranchesSpec: "release/qat",
+                excludeBranchesSpec: ""
+        )
+    }
      
     stages {  
        
