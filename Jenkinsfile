@@ -1,37 +1,85 @@
 pipeline {
     agent any
 
+    // nodejs is for SonarQube
     tools {
-    maven 'apache-maven-3.5.4'
+    maven 'apache-maven-3.6.1'
+    nodejs 'NodeJS 11.14' 
     }
-       
+    
+   // Reference the GitLab connection name from your Jenkins Global configuration (http://JENKINS_URL/configure, GitLab section)
+    options {
+        gitLabConnection('gitlab')
+    }
+    
     triggers {
-        githubPush()
-        pollSCM('')
+        gitlab( triggerOnPush: true, 
+                branchFilterType: 'All',
+                triggerOnMergeRequest: false,
+                triggerOpenMergeRequestOnPush: "never",
+                triggerOnNoteRequest: true,
+                noteRegex: "Jenkins please retry a build",
+                skipWorkInProgressMergeRequest: true,
+                secretToken: "weather-app-dev",
+                ciSkip: false,
+                setBuildDescription: true,
+                addNoteOnMergeRequest: true,
+                addCiMessage: true,
+                addVoteOnMergeRequest: true,
+                acceptMergeRequestOnSuccess: false,
+                includeBranchesSpec: "release/qat",
+                excludeBranchesSpec: ""
+        )
     }
      
-    stages {
+    stages {  
+       
         stage('Continuous Integration') {
             steps {                 
                 sh '''
                    mvn clean package
                    '''
-             }             
-        }
-        stage('Continuous Delivery') {
-            steps {
-                    sh '''   
-                        echo "docker login to mycluster.icp"
-                        echo "remove existing docker image in ICP"
-                        echo "docker push"
-                        echo "kubectl login"                       
-                        #!/bin/bash
-                        echo "checking if wlp-daytrader-jenkins already exists"
-                        echo "Create application"
-                        echo "Create service"
-                        echo "finished"
-                    '''
+                script {
+                    //app = docker.build("weather-app:${env.BUILD_NUMBER}")
+                    app = docker.build("weather-app:latest")
+                    app.inside { sh 'echo "Tests passed"'
+                    }
+                    docker.withRegistry('https://technet-k8s.hds-cloudconnect.com:12018/weather-app', 'nexus-credentials') {
+                        app.push()
+                    }
+                }
             }
         }
-    }
+        
+        stage('SonarQube analysis') {
+            steps {
+                sh 'npm config ls'
+                withSonarQubeEnv('SonarQube-7.7') {
+                    // requires SonarQube Scanner for Maven 3.2+
+                    sh 'mvn sonar:sonar'
+                }
+            }
+        }
+              
+        stage('Continuous Delivery') {
+            steps {
+                    withKubeConfig([credentialsId: 'k8suser', serverUrl: 'https://technet-k8s.hds-cloudconnect.com:6443']) {                    
+                    sh '''  
+                        if kubectl describe service weather-app-service -n demo-env-dev; then
+                            echo "Service already exists, delete first"
+                            kubectl delete service weather-app-service -n demo-env-dev
+                        fi
+                        if kubectl describe deployment weather-app-deployment -n demo-env-dev; then
+                            echo "Application already exists, delete first"
+                            kubectl delete deployment weather-app-deployment -n demo-env-dev
+                        fi                        
+                        echo "deploy to K8S"                                  
+                        sed -i.bak 's#weather-app:latest#technet-k8s.hds-cloudconnect.com:12018/weather-app:latest#' ./*.yaml
+                        kubectl --namespace=demo-env-dev apply -f ./deployment.yaml
+                        kubectl --namespace=demo-env-dev apply -f ./service.yaml                                                        
+                        '''                
+                    }
+               }
+          }
+     }
 }
